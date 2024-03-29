@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.mapper.BasIdxDataMapper">
+  <resultMap id="BaseResultMap" type="com.sinosoft.model.BasIdxData">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sys_org" jdbcType="BIGINT" property="sysOrg" />
+    <result column="project" jdbcType="BIGINT" property="project" />
+    <result column="data_source" jdbcType="TINYINT" property="dataSource" />
+    <result column="bas_industry" jdbcType="BIGINT" property="basIndustry" />
+    <result column="data_date" jdbcType="DATE" property="dataDate" />
+    <result column="bas_index" jdbcType="BIGINT" property="basIndex" />
+    <result column="data_type" jdbcType="TINYINT" property="dataType" />
+    <result column="property" jdbcType="BIGINT" property="property" />
+    <result column="data_value" jdbcType="DECIMAL" property="dataValue" />
+  </resultMap>
+  <resultMap id="ListResultMap" type="com.sinosoft.model.BasIdxData">
+    <result column="sys_org" jdbcType="BIGINT" property="sysOrg" />
+    <result column="project" jdbcType="BIGINT" property="project" />
+    <result column="data_source" jdbcType="TINYINT" property="dataSource" />
+    <result column="bas_industry" jdbcType="BIGINT" property="basIndustry" />
+    <result column="projectName" jdbcType="VARCHAR" property="projectName" />
+    <result column="orgName" jdbcType="VARCHAR" property="orgName" />
+    <result column="industryName" jdbcType="VARCHAR" property="industryName" />
+    <!--<collection property="dataValues" ofType="java.math.BigDecimal" javaType="java.util.ArrayList">
+         <result column="data_value" jdbcType="DECIMAL"/>
+       </collection>-->
+    <collection property="dataValueArr" column="{sysOrg=sys_org,basIndustry=bas_industry}"
+                select="com.sinosoft.mapper.BasIdxDataMapper.selectDataArr" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from bas_idx_data
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteAllDate">
+      delete from bas_idx_data_copy1 where data_interface = #{dataType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.sinosoft.model.BasIdxData">
+    insert into bas_idx_data (id, sys_org, project, 
+      data_source, bas_industry, data_date, 
+      bas_index, data_type, property, 
+      data_value)
+    values (#{id,jdbcType=BIGINT}, #{sysOrg,jdbcType=BIGINT}, #{project,jdbcType=BIGINT}, 
+      #{dataSource,jdbcType=TINYINT}, #{basIndustry,jdbcType=BIGINT}, #{dataDate,jdbcType=DATE}, 
+      #{basIndex,jdbcType=BIGINT}, #{dataType,jdbcType=TINYINT}, #{property,jdbcType=BIGINT}, 
+      #{dataValue,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertBasIdxData">
+    insert into bas_idx_data_c (sys_org, project,
+                              data_source, bas_industry, data_date,
+                              bas_index, property,
+                              data_value,data_interface)
+    values (#{basIdxData.sysOrg,jdbcType=BIGINT}, #{basIdxData.project,jdbcType=BIGINT},
+            #{basIdxData.dataSource,jdbcType=TINYINT}, #{basIdxData.basIndustry,jdbcType=BIGINT}, #{basIdxData.dataDate,jdbcType=DATE},
+            #{basIdxData.basIndex,jdbcType=BIGINT}, #{basIdxData.property,jdbcType=BIGINT},
+            #{basIdxData.dataValue,jdbcType=DECIMAL},#{dataType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertBasIdxDataData">
+    insert into cw_data (convert_ratio, data_source_code,finvalue_data_status, index_code,
+                         index_finvalue_id,index_value, org_code,org_name,sys_code,
+                         s_col_name,s_index_name,s_item_unit,s_report_name,
+                         time_type_code,t_index_name,t_index_unit,t_time_type,
+                         t_value_type,value_type_code,t_index_id,industry_name,data_date)
+    values (#{cwData.convertRatio,jdbcType=VARCHAR},#{cwData.dataSourceCode,jdbcType=VARCHAR},#{cwData.finvalueDataStatus,jdbcType=VARCHAR},#{cwData.indexCode,jdbcType=VARCHAR},
+            #{cwData.indexFinvalueId,jdbcType=VARCHAR},#{cwData.indexValue,jdbcType=VARCHAR},#{cwData.orgCode,jdbcType=VARCHAR},#{cwData.orgName,jdbcType=VARCHAR},
+            #{cwData.sysCode,jdbcType=VARCHAR},#{cwData.sColName,jdbcType=VARCHAR},#{cwData.sIndexName,jdbcType=VARCHAR},#{cwData.sItemUnit,jdbcType=VARCHAR},
+            #{cwData.sReportName,jdbcType=VARCHAR},#{cwData.timeTypeCode,jdbcType=VARCHAR},#{cwData.tIndexName,jdbcType=VARCHAR},#{cwData.tIndexUnit,jdbcType=VARCHAR},
+            #{cwData.tTimeYype,jdbcType=VARCHAR},#{cwData.tValueType,jdbcType=VARCHAR},#{cwData.valueTypeCode,jdbcType=VARCHAR},#{cwData.basIndexId,jdbcType=BIGINT},
+            #{cwData.industryName,jdbcType=VARCHAR},#{cwData.date,jdbcType=DATE})
+  </insert>
+  <insert id="insertJykjJh">
+    insert into jykj_jh_data (dim1, dim10,dim11, dim2,
+                              dim3,dim4, dim5,dim6,dim7,
+                              dim8,dim9,insertdate,njhztz,
+                              scene,value,xmjhztz)
+    values (#{jykjDataJh.dim1,jdbcType=VARCHAR},#{jykjDataJh.dim10,jdbcType=VARCHAR},#{jykjDataJh.dim11,jdbcType=VARCHAR}
+           ,#{jykjDataJh.dim2,jdbcType=VARCHAR},#{jykjDataJh.dim3,jdbcType=VARCHAR},#{jykjDataJh.dim4,jdbcType=VARCHAR}
+           ,#{jykjDataJh.dim5,jdbcType=VARCHAR},#{jykjDataJh.dim6,jdbcType=VARCHAR},#{jykjDataJh.dim7,jdbcType=VARCHAR}
+           ,#{jykjDataJh.dim8,jdbcType=VARCHAR},#{jykjDataJh.dim9,jdbcType=VARCHAR},#{jykjDataJh.insertdate,jdbcType=DATE}
+           ,#{jykjDataJh.njhztz,jdbcType=VARCHAR},#{jykjDataJh.scene,jdbcType=VARCHAR},#{jykjDataJh.value,jdbcType=VARCHAR}
+           ,#{jykjDataJh.xmjhztz,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertBasIdxDataJykjTj">
+    insert into jykj_tj_data (c1_category, c1_unit,c1_value, dim1,
+                              dim10,dim1_code, dim1_level,dim1_mdcode,dim2,
+                              dim4,dim8,index_id)
+    values (#{jykjDataTj.c1Category,jdbcType=VARCHAR},#{jykjDataTj.c1Unit,jdbcType=VARCHAR},#{jykjDataTj.c1Value,jdbcType=VARCHAR}
+           ,#{jykjDataTj.dim1,jdbcType=VARCHAR},#{jykjDataTj.dim10,jdbcType=VARCHAR},#{jykjDataTj.dim1Code,jdbcType=VARCHAR}
+           ,#{jykjDataTj.dim1Level,jdbcType=VARCHAR},#{jykjDataTj.dim1Mdcode,jdbcType=VARCHAR},#{jykjDataTj.dim2,jdbcType=VARCHAR}
+           ,#{jykjDataTj.dim4,jdbcType=VARCHAR},#{jykjDataTj.dim8,jdbcType=VARCHAR},#{jykjDataTj.basIndexId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertBasIdxDataYX">
+    insert into yx_data (bgdj,fschdlsr,fscjydl,issuename, orgsname,
+                         org_id,pjdj, powertypename,scjydj,scjydl,
+                         scjydlsr)
+    values (#{yXiao.bgdj,jdbcType=VARCHAR},#{yXiao.fschdlsr,jdbcType=VARCHAR},#{yXiao.fscjydl,jdbcType=VARCHAR},
+            #{yXiao.issuename,jdbcType=VARCHAR},#{yXiao.orgsname,jdbcType=VARCHAR},#{yXiao.orgId,jdbcType=VARCHAR},
+            #{yXiao.pjdj,jdbcType=VARCHAR},#{yXiao.powertypename,jdbcType=VARCHAR},#{yXiao.scjydj,jdbcType=VARCHAR},
+            #{yXiao.scjydl,jdbcType=VARCHAR},#{yXiao.scjydlsr,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.sinosoft.model.BasIdxData">
+    update bas_idx_data
+    set sys_org = #{sysOrg,jdbcType=BIGINT},
+      project = #{project,jdbcType=BIGINT},
+      data_source = #{dataSource,jdbcType=TINYINT},
+      bas_industry = #{basIndustry,jdbcType=BIGINT},
+      data_date = #{dataDate,jdbcType=DATE},
+      bas_index = #{basIndex,jdbcType=BIGINT},
+      data_type = #{dataType,jdbcType=TINYINT},
+      property = #{property,jdbcType=BIGINT},
+      data_value = #{dataValue,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, sys_org, project, data_source, bas_industry, data_date, bas_index, data_type, 
+    property, data_value
+    from bas_idx_data
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sys_org, project, data_source, bas_industry, data_date, bas_index, data_type, 
+    property, data_value
+    from bas_idx_data
+  </select>
+  <!--<select id="selectList" resultMap="ListResultMap">
+    select distinct d.sys_org , d.project, d.bas_industry,i.id bas_index
+    from bas_idx_data d,bas_index i
+    where d.data_date = '2021-01-31'
+    and d.property=3 order by i.id
+  </select>
+
+  <select id="selectList" resultMap="ListResultMap">
+    select ifnull(d1.data_value,0) data_value
+    from(select distinct d.sys_org , d.project, d.bas_industry,i.id bas_index
+    from bas_idx_data d,bas_index i
+    where d.data_date = '2021-01-31'
+    and d.property=3 order by i.id
+    and d.sys_org and d.project and d.bas_industry  and
+    )d
+    left join (select d.* from bas_idx_data d where d.data_date = '2021-01-31' and d.property=3
+    and d.sys_org and d.project and d.bas_industry  and )d1
+    on d.sys_org=d1.sys_org and d.project=d1.project and d.bas_industry=d1.bas_industry and d.bas_index=d1.bas_index
+  </select>-->
+  <!--综合查询-指标月数据查询-->
+  <select id="selectListForIndexMonth" resultMap="ListResultMap">
+    select d.sys_org, d.bas_industry, ifnull(p.project_name, '-') projectName, so.org_name orgName,
+    i.industry_name industryName
+    from sys_org so,
+    <if test="searchMap!=null and searchMap.monthProjectType !=null">
+      (select GROUP_CONCAT(type_code)code from bas_project_type where FIND_IN_SET(id,(
+      select group_concat( t.id ) from (
+      SELECT @ids id,
+      ( SELECT @ids := group_concat( id ) FROM bas_project_type WHERE is_valid=1 and find_in_set( pid, @ids ) ) cid
+      FROM bas_project_type,
+      (SELECT @ids := #{searchMap.monthProjectType})a where @ids is not null)t
+      ))) t,
+    </if>
+    bas_idx_data d
+    left join project p on p.id=d.project and p.is_valid=1
+    left join bas_industry i on i.id=d.bas_industry
+    left join bas_code province on province.id=p.province
+    where d.sys_org=so.id and so.is_valid=1
+    and d.property = (select ID from bas_property where prop_code='YSJ')/* 月实际（累计）数据 */
+    <if test="searchMap!=null and searchMap.monthProjectName !=null">
+      and p.project_name like '%${searchMap.monthProjectName}%'
+    </if>
+    <if test="searchMap!=null and searchMap.monthProvince !=null">
+      and province.id=#{searchMap.monthProvince}
+    </if>
+    <if test="searchMap!=null and searchMap.monthDate !=null">
+      and substr(d.data_date, 1, 7)=#{searchMap.monthDate}
+    </if>
+    <if test="searchMap!=null and searchMap.monthProjectType !=null">
+      and FIND_IN_SET(i.industry_code,t.code)
+    </if>
+    group by d.project, d.sys_org, d.bas_industry;
+  </select>
+  <!--综合查询-指标月数据子查询-->
+  <select id="selectDataArr" resultType="java.util.Map">
+    select bi.index_code indexCode, d.data_value dataValue
+    from bas_idx_data d, bas_index bi
+    where d.bas_index=bi.id and bi.is_valid=1 and d.sys_org=#{sysOrg} and d.bas_industry=#{basIndustry}
+    order by bi.orderby
+  </select>
+</mapper>

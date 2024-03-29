@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.mapper.SysOrgMapper">
+  <resultMap id="BaseResultMap" type="com.sinosoft.model.SysOrg">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pid" jdbcType="BIGINT" property="pid" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+    <result column="p_name" jdbcType="VARCHAR" property="pName"/>
+    <result column="org_remark" jdbcType="VARCHAR" property="orgRemark"/>
+    <result column="org_simple_name" jdbcType="VARCHAR" property="orgSimpleName"/>
+    <result column="is_statistics" jdbcType="TINYINT" property="isStatistics"/>
+    <result column="is_partner" jdbcType="TINYINT" property="isPartner"/>
+    <result column="register_time" jdbcType="DATE" property="registerTime"/>
+    <result column="register_place" jdbcType="VARCHAR" property="registerPlace"/>
+    <result column="orderby" jdbcType="INTEGER" property="orderby"/>
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+    <result column="is_valid" jdbcType="TINYINT" property="isValid"/>
+    <result column="invalid_date" jdbcType="TIMESTAMP" property="invalidDate"/>
+    <result column="org_attr" jdbcType="TINYINT" property="orgAttr"/>
+    <result column="register_capital" jdbcType="DECIMAL" property="registerCapital"/>
+    <result column="period_start" jdbcType="DATE" property="periodStart"/>
+    <result column="period_end" jdbcType="DATE" property="periodEnd"/>
+    <result column="legal_person" jdbcType="BIGINT" property="legalPerson"/>
+    <result column="is_branch_office" jdbcType="TINYINT" property="isBranchOffice"/>
+    <result column="orgAttrName" jdbcType="BIGINT" property="orgAttrName"/>
+    <result column="legalPersonName" jdbcType="VARCHAR" property="legalPersonName"/>
+    <result column="isPromise" jdbcType="TINYINT" property="isPromise"/>
+    <result column="industry" jdbcType="BIGINT" property="industry"/>
+  </resultMap>
+  <resultMap id="DetailResultMap" type="com.sinosoft.model.SysOrg" extends="BaseResultMap">
+    <collection property="sysOrgShareholderList" column="id"
+                select="com.sinosoft.mapper.SysOrgShareholderMapper.selectAll"/>
+    <collection property="sysOrgIndustryClassifys" column="sysOrg=id"
+                select="com.sinosoft.mapper.SysOrgIndustryClassifyMapper.selectAll"/>
+  </resultMap>
+  <select id="selectOrg" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT
+    o.id,
+    o.pid
+    FROM
+        sys_user u
+        LEFT JOIN sys_dep d ON d.id = u.sys_dep
+        LEFT JOIN sys_org o ON o.id = d.sys_org
+    WHERE
+        u.is_valid = 1
+        AND d.is_valid = 1
+        AND u.id = #{id,jdbcType=BIGINT}
+  </select>
+
+    <select id="queryOrgTreeByPid" resultType="com.sinosoft.vo.Node">
+        select id, org_name title,(case id when #{id} then null else pid end) parentId from sys_org
+        where is_valid = 1
+        and (id=#{id,jdbcType=BIGINT}
+        or pid=#{id,jdbcType=BIGINT})
+    </select>
+    <select id="queryOrg" resultType="com.sinosoft.vo.Node">
+        select id, org_name title,pid parentId from sys_org
+        where is_valid = 1
+        <if test="id!=null and id!=0 and id!=-1">
+            and id=#{id,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update sys_org
+        set is_valid=0,invalid_date=now()
+        where id in
+        <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinosoft.model.SysOrg">
+        insert into sys_org (id, pid, org_code,
+        org_name, org_remark, orderby, org_simple_name, is_statistics,
+        is_partner, register_time, register_place,
+        create_date, update_date, is_valid, invalid_date,
+        org_attr, register_capital, period_start, period_end, legal_person,
+        is_branch_office)
+        values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{orgCode,jdbcType=VARCHAR},
+        #{orgName,jdbcType=VARCHAR}, #{orgRemark,jdbcType=VARCHAR}, #{orderby,jdbcType=INTEGER},
+        #{orgSimpleName,jdbcType=VARCHAR}, #{isStatistics,jdbcType=TINYINT}, #{isPartner,jdbcType=TINYINT},
+        #{registerTime,jdbcType=DATE}, #{registerPlace,jdbcType=VARCHAR},
+        now(), #{updateDate,jdbcType=TIMESTAMP}, 1, #{invalidDate,jdbcType=TIMESTAMP},
+        #{orgAttr,jdbcType=TINYINT}, #{registerCapital,jdbcType=DECIMAL},
+        #{periodStart,jdbcType=DATE}, #{periodEnd,jdbcType=DATE}, #{legalPerson,jdbcType=BIGINT},
+        #{isBranchOffice,jdbcType=TINYINT})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.sinosoft.model.SysOrg">
+        update sys_org
+        set pid = #{pid,jdbcType=BIGINT},
+        org_code = #{orgCode,jdbcType=VARCHAR},
+        org_name = #{orgName,jdbcType=VARCHAR},
+        org_remark = #{orgRemark,jdbcType=VARCHAR},
+        org_simple_name = #{orgSimpleName,jdbcType=VARCHAR},
+        is_statistics = #{isStatistics,jdbcType=TINYINT},
+        is_partner = #{isPartner,jdbcType=TINYINT},
+        register_time = #{registerTime,jdbcType=DATE},
+        register_place = #{registerPlace,jdbcType=VARCHAR},
+        update_date = now(),
+        org_attr = #{orgAttr,jdbcType=TINYINT},
+        register_capital = #{registerCapital,jdbcType=DECIMAL},
+        period_start = #{periodStart,jdbcType=DATE},
+        period_end = #{periodEnd,jdbcType=DATE},
+        legal_person = #{legalPerson,jdbcType=BIGINT},
+        is_branch_office = #{isBranchOffice,jdbcType=TINYINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="DetailResultMap">
+        select so.id, so.pid, so.org_code, so.org_name, so.org_remark, so.org_simple_name, so.is_statistics,
+        so.is_partner, so.register_time, so.register_place, so.register_capital,
+        so.org_attr, so.register_capital, so.period_start, so.period_end, so.legal_person, so.is_branch_office,
+        (case so.org_attr when 0 then '拟并购/拟开发' when 1 then '全资' when 2 then '参股' when 3 then '控股' else '' end)
+        orgAttrName, b.legal_person_name legalPersonName, b.is_promise isPromise, ifnull(t.org_name, '') as p_name,
+        a.codeName sysOrgIndustryClassifyNames
+        from sys_org so
+        left join (select soic.sys_org, group_concat(bc.code_name) codeName from sys_org_industry_classify soic,bas_code
+        bc
+        where soic.industry_classify=bc.id group by soic.sys_org) a on a.sys_org=so.id
+        left join bas_legal_person b on b.id=so.legal_person
+        left join sys_org t on t.id=so.pid
+        where so.id = #{id,jdbcType=BIGINT} limit 1
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select s.id, s.org_name, s.org_remark, ifnull(t.org_name, '') as p_name
+        from sys_org s
+        left join sys_org t
+        on s.pid=t.id
+        where s.is_valid=1
+        <if test="searchMap.orgName != null and searchMap.orgName != ''">
+            and s.org_name like "%"#{searchMap.orgName}"%"
+        </if>
+        <choose>
+            <when test="searchMap.getAllInPermission != null and searchMap.getAllInPermission == 'true'">
+                and s.id in (
+                select temp.finalId from
+                (select data.id as finalId from(
+                select
+                @ids as _ids,
+                ( select @ids := group_concat(id)
+                from sys_org
+                where find_in_set(pid, @ids)
+                ) as cids,
+                @l := @l+1 as level
+                from sys_org,
+                (select @ids := #{searchMap.pid}, @l := 0 ) b
+                where @ids is not null
+                ) id
+                join sys_org data
+                on find_in_set(data.id, id._ids) and data.is_valid=1
+                order by level, id) temp)
+            </when>
+            <otherwise>
+                and s.pid = #{searchMap.pid}
+            </otherwise>
+        </choose>
+        order by s.orderby, s.id
+    </select>
+    <select id="selectAllListForTree" resultType="com.sinosoft.vo.Node">
+        select id, (case id when #{orgId} then null else pid end) parentId, org_name title
+        from sys_org where is_valid = 1
+        <if test="withOutId != null and withOutId != ''">
+            and id &lt;&gt; #{withOutId,jdbcType=BIGINT}
+        </if>
+        <if test="orgId != null">
+            and FIND_IN_SET(id,getOrgChildList(#{orgId}))
+        </if>
+        order by orderby, id
+    </select>
+    <select id="getSortData" resultMap="BaseResultMap">
+        select id, org_name, orderby
+        from sys_org
+        where is_valid=1
+        <choose>
+            <when test="orgIdList != null">
+                and id in
+                <foreach collection="orgIdList" item="orgId" open="(" separator="," close=")">
+                    #{orgId}
+                </foreach>
+            </when>
+            <otherwise>
+                <if test='pid != null and pid != "" and pid != "-1"'>
+                    and pid = #{pid}
+                </if>
+            </otherwise>
+        </choose>
+        order by orderby, id
+    </select>
+    <update id="updateOrderby">
+        update sys_org
+        set orderby=case id
+        <foreach collection="ids" index="index" item="id">
+            when #{id} then #{index}
+        </foreach>
+        end
+        where id in
+        <foreach collection="ids" index="index" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+    <select id="verify" resultType="java.lang.Boolean">
+        select if(count(id)=0, true, false) from sys_org where is_valid=1 and org_name = #{orgName}
+        <if test="id != null and id != ''">
+            and id &lt;&gt; #{id}
+        </if>
+    </select>
+    <select id="verifyCode" resultType="java.lang.Boolean">
+        select if(count(id)=0, true, false) from sys_org where is_valid=1 and org_code = #{orgCode}
+        <if test="id != null and id != ''">
+            and id &lt;&gt; #{id}
+        </if>
+    </select>
+    <select id="getOrderBy" resultType="java.lang.Integer">
+        select max(orderby) from sys_org where is_valid=1
+    </select>
+    <select id="getByUserId" resultMap="BaseResultMap">
+        select id, pid, org_code
+        from sys_org
+        where id =
+        (select d.sys_org from sys_dep d join sys_user u on d.id = u.sys_dep
+        where u.id = #{userId,jdbcType=BIGINT})
+    </select>
+    <select id="listOrgAndSonOrgId" resultType="java.lang.Long">
+        select temp.finalId from
+        (select data.id as finalId from(
+        select
+        @ids as _ids,
+        ( select @ids := group_concat(id)
+        from sys_org
+        where find_in_set(pid, @ids)
+        ) as cids,
+        @l := @l+1 as level
+        from sys_org,
+        (select @ids := #{orgId,jdbcType=VARCHAR}, @l := 0 ) b
+        where @ids is not null
+        ) id
+        join sys_org data
+        on find_in_set(data.id, id._ids) and data.is_valid=1
+        order by level, id) temp
+    </select>
+    <select id="listSonOrgIdByIdStr" resultType="long">
+        select temp.finalId from
+        (select data.id as finalId from(
+        select
+        @ids as _ids,
+        ( select @ids := group_concat(id)
+        from sys_org
+        where find_in_set(pid, @ids)
+        ) as cids,
+        @l := @l+1 as level
+        from sys_org,
+        (select @ids := #{ids,jdbcType=VARCHAR}, @l := 0 ) b
+        where @ids is not null
+        ) id
+        join sys_org data
+        on find_in_set(data.id, id._ids) and data.is_valid=1
+        order by level, id) temp
+    </select>
+    <!--获取下级直属机构-->
+    <select id="listSonOrgId" resultType="java.lang.String">
+        select group_concat(so.id) from sys_org so where so.is_valid=1 and so.pid=#{ordId}
+    </select>
+    <!--根据机构id获取上级机构-->
+    <select id="getPOrgListById" resultMap="BaseResultMap">
+        select t.*,so.org_code from
+        (
+        select
+        @ids id,
+        ( select @ids:= group_concat(pid)
+        from sys_org
+        where find_in_set(id, @ids)
+        ) as pid,
+        @l := @l+1 as level
+        from sys_org,(select @ids:=#{id,jdbcType=VARCHAR}, @l:= 0)b
+        where @ids is not null
+        order by @l desc
+        )t
+        left join sys_org so on so.id=t.id
+    </select>
+    <!--获取需要首页统计的机构-->
+    <select id="selectSysOrgStatistics" resultType="com.sinosoft.vo.RiskStatisticsVO">
+        SELECT so.id VALUE, so.org_simple_name NAME
+        FROM sys_org so
+        WHERE so.is_valid = 1 AND so.is_statistics=1
+        ORDER BY so.orderby
+    </select>
+    <!-- 获取企业图谱检索内容：机构（机构属性为“拟并购/拟开发”的不在图谱中体现）+法人+股东 -->
+    <select id="selectOrgShareholderLegalPersonList" resultMap="BaseResultMap">
+        select concat('0_',org_name) org_name from sys_org where is_valid=1 and org_attr!=0 union
+        /*select concat('1_',shareholder_name) from bas_shareholder where is_valid=1 union*/
+        select concat('2_',legal_person_name) from bas_legal_person where is_valid=1
+    </select>
+    <select id="selectChildsById" resultType="java.lang.String">
+        select getOrgChildList(#{id}) from dual
+    </select>
+    <!-- 获取企业图谱检索内容：机构+法人+股东 -->
+    <select id="selectPartnerList" resultMap="BaseResultMap">
+        select so.id, so.org_name, so.org_simple_name
+        from sys_org so
+        where so.is_valid=1 and so.is_partner=1
+        order by so.orderby
+    </select>
+    <select id="selectAllList" resultMap="BaseResultMap">
+        select id, pid, org_code,
+        org_name, org_remark, orderby, org_simple_name, is_statistics,
+        is_partner, register_time, register_place,
+        create_date, update_date, is_valid, invalid_date,
+        org_attr, register_capital, period_start, period_end, legal_person,
+        is_branch_office
+        from sys_org
+        where is_valid = 1
+        order by orderby
+    </select>
+    <select id="selectByName" resultMap="BaseResultMap">
+        select id, pid, org_code, org_simple_name, org_name, orderby
+        from sys_org
+        where is_valid = 1 and org_name = #{orgName,jdbcType=VARCHAR} limit 1
+    </select>
+    <select id="selectByPid" resultMap="BaseResultMap">
+        select id, pid, org_code, org_simple_name, org_name, orderby
+        from sys_org
+        where is_valid = 1 and pid = #{pid,jdbcType=BIGINT}
+        order by orderby
+    </select>
+    <select id="selectEachrtTreeListByPid" resultType="com.sinosoft.vo.EchartTreeDataVO">
+        select id, (case when pid = #{pid,jdbcType=BIGINT} then -1 else pid end) pid , org_name name
+        from sys_org
+        where is_valid = 1 and FIND_IN_SET(id,getOrgChildList(#{pid,jdbcType=BIGINT}))
+        and id != #{pid,jdbcType=BIGINT} and org_attr!=0
+        order by orderby
+    </select>
+    <select id="querySuyingMajorRiskOrg" resultType="com.sinosoft.vo.Node">
+        select org_name as id , org_name as title,null as parentId
+        from(
+        SELECT DISTINCT org_name
+        FROM `suying_major_risk_monitor`
+        where org_name is not null
+        )a
+    </select>
+    <select id="selectAllListForSuyingTree" resultType="com.sinosoft.vo.Node">
+        select id, (case id when #{orgId} then null else pid end) parentId, org_simple_name title
+        from sys_org where is_valid = 1
+        <if test="withOutId != null and withOutId != ''">
+            and id &lt;&gt; #{withOutId,jdbcType=BIGINT}
+        </if>
+        <if test="orgId != null">
+            and FIND_IN_SET(id,getOrgChildListByLevel(#{orgId},#{level}))
+        </if>
+        order by orderby, id
+    </select>
+    <select id="selectByStatementName" resultType="com.sinosoft.model.SysOrg">
+        select t1.id, t1.pid, t1.org_code, t1.org_simple_name, t1.org_name, t1.orderby,t2.id industry
+        from sys_org t1
+        left join bas_code b on t1.industry = b.id
+        left join bas_industry t2 on t2.industry_name = b.code_name
+        where t1.is_valid = 1 and t1.org_statement_name = #{orgStatementName,jdbcType=VARCHAR} limit 1
+    </select>
+    <select id="selectByDataDockCode" resultType="com.sinosoft.model.SysOrg">
+        select t1.id, t1.pid, t1.org_code, t1.org_simple_name, t1.org_name, t1.orderby,t2.id industry
+        from sys_org t1
+        left join bas_code b on t1.industry = b.id
+        left join bas_industry t2 on t2.industry_name = b.code_name
+        where t1.is_valid = 1 and t1.data_dock_code = #{dataDockCode,jdbcType=VARCHAR} limit 1
+    </select>
+    <select id="selectBySimpleName" resultType="com.sinosoft.model.SysOrg">
+        select t1.id, t1.pid, t1.org_code, t1.org_simple_name, t1.org_name, t1.orderby,t2.id industry
+        from sys_org t1
+                 left join bas_code b on t1.industry = b.id
+                 left join bas_industry t2 on t2.industry_name = b.code_name
+        where t1.is_valid = 1 and t1.org_simple_name = #{orgSimpleName,jdbcType=VARCHAR} limit 1
+    </select>
+    <select id="selectByOrgName" resultType="com.sinosoft.model.SysOrg">
+        select t1.id, t1.pid, t1.org_code, t1.org_simple_name, t1.org_name, t1.orderby,t2.id industry
+        from sys_org t1
+                 left join bas_code b on t1.industry = b.id
+                 left join bas_industry t2 on t2.industry_name = b.code_name
+        where t1.is_valid = 1 and t1.org_name = #{orgName,jdbcType=VARCHAR} limit 1
+    </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.mapper.ProInvestmentMapper">
+
+  <insert id="insertList">
+    insert into pro_investment_c (sys_org,
+    project_name,
+    project_type,
+    data_date,
+    installed_capacity,
+    investment_year_plan,
+    investment_year,
+    investment_total_plan,
+    investment_total
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.sysOrg,jdbcType=VARCHAR}, #{item.projectName,jdbcType=VARCHAR}, #{item.projectType,jdbcType=VARCHAR},
+      #{item.dataDate,jdbcType=DATE},#{item.installedCapacity,jdbcType=VARCHAR},#{item.investmentYearPlan,jdbcType=DECIMAL},
+      #{item.investmentYear,jdbcType=DECIMAL}, #{item.investmentTotalPlan,jdbcType=DECIMAL}, #{item.investmentTotal,jdbcType=DECIMAL})
+    </foreach>
+  </insert>
+</mapper>

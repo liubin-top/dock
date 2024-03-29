@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.mapper.BasIndexMapper">
+  <resultMap id="BaseResultMap" type="com.sinosoft.model.BasIndex">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="index_code" jdbcType="VARCHAR" property="indexCode" />
+    <result column="index_name" jdbcType="VARCHAR" property="indexName" />
+    <result column="index_unit" jdbcType="VARCHAR" property="indexUnit" />
+    <result column="orderby" jdbcType="INTEGER" property="orderby" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="is_valid" jdbcType="TINYINT" property="isValid" />
+    <result column="invalid_date" jdbcType="TIMESTAMP" property="invalidDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from bas_index
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.sinosoft.model.BasIndex">
+    insert into bas_index (id, index_code, index_name,
+      index_unit, orderby, create_date,
+      update_date, is_valid, invalid_date)
+    values (#{id,jdbcType=BIGINT}, #{indexCode,jdbcType=VARCHAR}, #{indexName,jdbcType=VARCHAR}, 
+      #{indexUnit,jdbcType=VARCHAR}, #{orderby,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+      #{updateDate,jdbcType=TIMESTAMP}, #{isValid,jdbcType=TINYINT}, #{invalidDate,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.sinosoft.model.BasIndex">
+    update bas_index
+    set index_code = #{indexCode,jdbcType=VARCHAR},
+      index_name = #{indexName,jdbcType=VARCHAR},
+      index_unit = #{indexUnit,jdbcType=VARCHAR},
+      orderby = #{orderby,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=TINYINT},
+      invalid_date = #{invalidDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, index_code, index_name, index_unit, orderby, create_date, update_date, is_valid, invalid_date
+    from bas_index
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, index_code, index_name, index_unit, orderby, create_date, update_date, is_valid, invalid_date
+    from bas_index
+  </select>
+  <select id="selectAllList" resultMap="BaseResultMap">
+    select id, index_code, index_name, index_unit, orderby, create_date, update_date, is_valid, invalid_date
+    from bas_index
+    where is_valid=1
+    order by orderby
+  </select>
+  <select id="selectByType" resultMap="BaseResultMap">
+    select * from bas_index
+    where is_valid=1
+    and index_type=#{type}
+    order by orderby
+  </select>
+  <select id="selectByIndexType" resultMap="BaseResultMap">
+     select * from bas_index i,bas_index_index_type ti
+    where i.is_valid=1
+    and ti.index_type=#{type}
+    and i.id=ti.bas_index
+    order by i.orderby
+  </select>
+    <select id="selectByIndexName" resultType="java.lang.Long">
+      select id from bas_index where index_name = #{name} and is_valid = 1
+    </select>
+    <select id="selectBasIndustry" resultType="java.lang.Long">
+      SELECT IFNULL(( SELECT id FROM bas_industry WHERE industry_name = #{industryName} and is_valid = 1 ),
+                    7
+               );
+    </select>
+</mapper>

@@ -1,0 +1,1409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.mapper.BasIdxDataMonthMapper">
+  <resultMap id="BaseResultMap" type="com.sinosoft.model.BasIdxDataMonth">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="sys_org" jdbcType="BIGINT" property="sysOrg" />
+    <result column="bas_industry" jdbcType="BIGINT" property="basIndustry" />
+    <result column="project" jdbcType="BIGINT" property="project" />
+    <result column="data_date" jdbcType="VARCHAR" property="dataDate" />
+    <result column="bas_index" jdbcType="BIGINT" property="basIndex" />
+    <result column="data_source" jdbcType="BIGINT" property="dataSource" />
+    <result column="data_month" jdbcType="DECIMAL" property="dataMonth" />
+    <result column="data_month_plan" jdbcType="DECIMAL" property="dataMonthPlan" />
+    <result column="data_year" jdbcType="DECIMAL" property="dataYear" />
+    <result column="data_year_plan" jdbcType="DECIMAL" property="dataYearPlan" />
+    <result column="data_year_init" jdbcType="DECIMAL" property="dataYearInit" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from bas_idx_data_month
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteMonthDate">
+        delete from bas_idx_data_month_copy1 where data_interface = #{dataType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.sinosoft.model.BasIdxData">
+    insert into bas_idx_data_month (sys_org,bas_industry,project,data_date,bas_index,
+                              data_source,data_month,data_month_plan,data_year,
+                              data_year_plan,data_year_init)
+    values (#{sysOrg,jdbcType=BIGINT}, #{basIndustry,jdbcType=BIGINT}, #{project,jdbcType=BIGINT},
+            #{dataDate,jdbcType=VARCHAR},#{basIndex,jdbcType=BIGINT},#{dataSource,jdbcType=TINYINT},
+       #{dataMonth,jdbcType=DECIMAL}, #{dataMonthPlan,jdbcType=DECIMAL}, #{dataYear,jdbcType=DECIMAL},
+       #{dataYearPlan,jdbcType=DECIMAL},#{dataYearInit,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.sinosoft.model.BasIdxData">
+    update bas_idx_data_month
+    set sys_org = #{sysOrg,jdbcType=BIGINT},
+        bas_industry = #{basIndustry,jdbcType=BIGINT},
+        project = #{project,jdbcType=BIGINT},
+        data_date = #{dataDate,jdbcType=VARCHAR},
+        bas_index = #{basIndex,jdbcType=BIGINT},
+        data_source = #{dataSource,jdbcType=TINYINT},
+        data_month = #{dataMonth,jdbcType=DECIMAL},
+        data_month_plan = #{dataMonthPlan,jdbcType=DECIMAL},
+        data_year = #{dataYear,jdbcType=DECIMAL},
+        data_year_plan = #{dataYearPlan,jdbcType=DECIMAL},
+        data_year_init = #{dataYearInit,jdbcType=DECIMAL}
+    where sys_org = #{sysOrg,jdbcType=BIGINT} and
+        bas_industry = #{basIndustry,jdbcType=BIGINT} and
+      project = #{project,jdbcType=BIGINT} and
+      data_date = #{dataDate,jdbcType=VARCHAR} and
+      bas_index = #{basIndex,jdbcType=BIGINT and
+      data_source = #{dataSource,jdbcType=TINYINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, sys_org, project, data_source, bas_industry, data_date, bas_index, data_type, 
+    property, data_value
+    from bas_idx_data_month
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, sys_org, project, data_source, bas_industry, data_date, bas_index, data_type, 
+    property, data_value
+    from bas_idx_data_month
+  </select>
+  <insert id="insertByBatch">
+    delete from bas_idx_data_month
+    where
+    <foreach collection="list" item="item" separator=" or ">
+        (sys_org = #{item.sysOrg,jdbcType=BIGINT} and bas_industry= #{item.basIndustry,jdbcType=BIGINT} and
+      project = #{item.project,jdbcType=BIGINT} and data_date = #{item.dataDate,jdbcType=VARCHAR} and
+      bas_index = #{item.basIndex,jdbcType=BIGINT} and data_source = #{item.dataSource,jdbcType=TINYINT} )
+    </foreach>
+    ;
+    insert into bas_idx_data_month (sys_org,bas_industry,project,data_date,bas_index,
+    data_source,data_month,data_month_plan,data_year,
+    data_year_plan,data_year_init)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.sysOrg,jdbcType=BIGINT}, #{item.basIndustry,jdbcType=BIGINT}, #{item.project,jdbcType=BIGINT},
+      #{item.dataDate,jdbcType=VARCHAR},#{item.basIndex,jdbcType=BIGINT},#{item.dataSource,jdbcType=TINYINT},
+      #{item.dataMonth,jdbcType=DECIMAL}, #{item.dataMonthPlan,jdbcType=DECIMAL}, #{item.dataYear,jdbcType=DECIMAL},
+      #{item.dataYearPlan,jdbcType=DECIMAL},#{item.dataYearInit,jdbcType=DECIMAL})
+    </foreach>
+    ;
+  </insert>
+    <insert id="insertMonthDate">
+        insert into bas_idx_data_month_c (sys_org,bas_industry,project,data_date,bas_index,
+                                        data_source,data_month,data_month_plan,data_year,
+                                        data_year_plan,data_year_init,data_interface)
+        values (#{basIdxDataMonth.sysOrg,jdbcType=BIGINT}, #{basIdxDataMonth.basIndustry,jdbcType=BIGINT}, #{basIdxDataMonth.project,jdbcType=BIGINT},
+                #{basIdxDataMonth.dataDate,jdbcType=VARCHAR},#{basIdxDataMonth.basIndex,jdbcType=BIGINT},#{basIdxDataMonth.dataSource,jdbcType=TINYINT},
+                #{basIdxDataMonth.dataMonth,jdbcType=DECIMAL}, #{basIdxDataMonth.dataMonthPlan,jdbcType=DECIMAL}, #{basIdxDataMonth.dataYear,jdbcType=DECIMAL},
+                #{basIdxDataMonth.dataYearPlan,jdbcType=DECIMAL},#{basIdxDataMonth.dataYearInit,jdbcType=DECIMAL},#{dataType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertByList">
+        insert into bas_idx_data_month_c (sys_org,bas_industry,project,data_date,bas_index,
+        data_source,data_month,data_month_plan,data_year,
+        data_year_plan,data_year_init,data_interface)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.sysOrg,jdbcType=BIGINT}, #{item.basIndustry,jdbcType=BIGINT}, #{item.project,jdbcType=BIGINT},
+            #{item.dataDate,jdbcType=VARCHAR},#{item.basIndex,jdbcType=BIGINT},#{item.dataSource,jdbcType=TINYINT},
+            #{item.dataMonth,jdbcType=DECIMAL}, #{item.dataMonthPlan,jdbcType=DECIMAL}, #{item.dataYear,jdbcType=DECIMAL},
+            #{item.dataYearPlan,jdbcType=DECIMAL},#{item.dataYearInit,jdbcType=DECIMAL},#{item.dataInterface,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <insert id="insertByListFdl">
+        insert into bas_idx_data_month_fdl (sys_org,bas_industry,project,data_date,bas_index,
+        data_source,data_month,data_month_plan,data_year,
+        data_year_plan,data_year_init,data_interface)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.sysOrg,jdbcType=BIGINT}, #{item.basIndustry,jdbcType=BIGINT}, #{item.project,jdbcType=BIGINT},
+            #{item.dataDate,jdbcType=VARCHAR},#{item.basIndex,jdbcType=BIGINT},#{item.dataSource,jdbcType=TINYINT},
+            #{item.dataMonth,jdbcType=DECIMAL}, #{item.dataMonthPlan,jdbcType=DECIMAL}, #{item.dataYear,jdbcType=DECIMAL},
+            #{item.dataYearPlan,jdbcType=DECIMAL},#{item.dataYearInit,jdbcType=DECIMAL},#{item.dataInterface,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <insert id="mergeData">
+
+        DELETE FROM bas_idx_data_month_a;
+        DELETE FROM bas_idx_data_month_d;
+        DELETE FROM bas_idx_data_month_e;
+        DELETE FROM bas_idx_data_month_f;
+        DELETE FROM bas_idx_data_month_k;
+        DELETE FROM bas_idx_data_month_z;
+
+
+-- --去重
+        insert into bas_idx_data_month_a
+        select DISTINCT *
+        FROM bas_idx_data_month_c;
+
+-- --去重
+        insert into bas_idx_data_month_d(sys_org , bas_industry,
+                                         project,data_date,bas_index,data_source,
+                                         data_month,
+                                         data_month_plan,
+                                         data_year,data_year_plan,data_year_init,data_interface)
+        select DISTINCT *
+        FROM bas_idx_data_month_a;
+
+
+-- 			--合并年月数据
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = 'Jykj统计') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = 'Jykj统计') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+--         --删除已合并数据
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='Jykj统计';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='Jykj统计';
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = 'Jykj统计';
+
+
+-- 				--合并发电量计划数据
+
+        insert into bas_idx_data_month_k
+        SELECT a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               a.data_month      data_month,
+               b.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               a.id              id,
+               a.id              year_id
+        FROM  (select *
+               FROM bas_idx_data_month_e
+               WHERE bas_index = 3
+                 and data_interface = 'Jykj统计') a
+                  INNER join
+              (select *
+               FROM bas_idx_data_month_fdl
+               WHERE data_interface = 'JykjFdl计划') b
+              on a.sys_org = b.sys_org
+                  and a.bas_industry = b.bas_industry
+                  AND a.data_date = b.data_date
+                  and a.bas_index = b.bas_index;
+
+        DELETE
+        bas_idx_data_month_e
+        FROM bas_idx_data_month_e
+        INNER JOIN bas_idx_data_month_k ON bas_idx_data_month_e.id = bas_idx_data_month_k.id;
+
+        INSERT into bas_idx_data_month_e SELECT * FROM bas_idx_data_month_k;
+
+-- 				--合并年月数据
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '利润月报表（总）') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '利润月报表（总）') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+--         --删除已合并数据
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='利润月报表（总）';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='利润月报表（总）';
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '利润月报表（总）';
+
+
+-- 				--合并利润表三
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '利润月报表（三）') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '利润月报表（三）') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+--         --删除已合并数据
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='利润月报表（三）';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='利润月报表（三）';
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '利润月报表（三）';
+
+
+
+
+-- 			--合并资产负债月报表
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               a.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               b.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_year_init is null
+                and data_interface = '资产负债月报表') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_year_init is not null
+                and data_interface = '资产负债月报表') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='资产负债月报表';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='资产负债月报表';
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '资产负债月报表';
+
+
+-- 			--合并利润表一
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '利润月报表（一）') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '利润月报表（一）') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+--         --删除已合并数据
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='利润月报表（一）';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='利润月报表（一）';
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '利润月报表（一）';
+
+-- 		--成本情况
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '成本情况月报表') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '成本情况月报表') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='成本情况月报表';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='成本情况月报表';
+
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '成本情况月报表';
+
+
+-- 				--电力技术经济指标月报表
+        insert into bas_idx_data_month_e
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface,
+               b.id              id,
+               a.id              year_id
+        FROM (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '电力技术经济指标月报表') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_d
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '电力技术经济指标月报表') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+--         --删除已合并数据
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.id WHERE bas_idx_data_month_d.data_interface='电力技术经济指标月报表';
+
+        DELETE
+        bas_idx_data_month_d
+        FROM bas_idx_data_month_d
+        INNER JOIN bas_idx_data_month_e ON bas_idx_data_month_d.id = bas_idx_data_month_e.year_id WHERE bas_idx_data_month_d.data_interface='电力技术经济指标月报表';
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '电力技术经济指标月报表';
+
+
+
+
+        -- 合并带息负债情况表（月报表）
+        INSERT INTO bas_idx_data_month_z SELECT
+                                             c.sys_org sys_org,
+                                             c.bas_industry bas_industry,
+                                             c.project project,
+                                             c.data_date data_date,
+                                             c.bas_index bas_index,
+                                             c.data_source data_source,
+                                             c.data_month data_month,
+                                             c.data_month_plan data_month_plan,
+                                             c.data_year data_year,
+                                             c.data_year_plan data_year_plan,
+                                             d.data_year_init data_year_init,
+                                             c.data_interface data_interface,
+                                             c.id id,
+                                             c.year_id year_id,
+                                             d.id init_id
+        FROM
+            (
+                SELECT
+                    a.sys_org sys_org,
+                    a.bas_industry bas_industry,
+                    a.project project,
+                    a.data_date data_date,
+                    a.bas_index bas_index,
+                    a.data_source data_source,
+                    b.data_month data_month,
+                    a.data_month_plan data_month_plan,
+                    a.data_year data_year,
+                    a.data_year_plan data_year_plan,
+                    a.data_year_init data_year_init,
+                    a.data_interface data_interface,
+                    b.id id,
+                    a.id year_id
+                FROM
+                    (
+                        SELECT
+                            *
+                        FROM
+                            bas_idx_data_month_d
+                        WHERE
+                            data_year IS NOT NULL
+                          AND data_month IS NULL
+                          AND data_interface = '带息负债情况表（月报表）'
+                          AND bas_index IN ( 395, 396 )) a
+                        INNER JOIN (
+                        SELECT
+                            *
+                        FROM
+                            bas_idx_data_month_d
+                        WHERE
+                            data_year IS NULL
+                          AND data_month IS NOT NULL
+                          AND data_interface = '带息负债情况表（月报表）'
+                          AND bas_index IN ( 395, 396 )) b ON a.sys_org = b.sys_org
+                        AND a.bas_industry = b.bas_industry
+                        AND a.data_date = b.data_date
+                        AND a.bas_index = b.bas_index
+            ) c
+                INNER JOIN (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year IS NULL
+                  AND data_year_init IS NOT NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) d ON c.sys_org = d.sys_org
+                AND c.bas_industry = d.bas_industry
+                AND c.data_date = d.data_date
+                AND c.bas_index = d.bas_index;
+
+
+
+        DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）';
+DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.year_id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）';
+DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.init_id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）';
+        INSERT INTO bas_idx_data_month_z SELECT
+                                             a.sys_org sys_org,
+                                             a.bas_industry bas_industry,
+                                             a.project project,
+                                             a.data_date data_date,
+                                             a.bas_index bas_index,
+                                             a.data_source data_source,
+                                             a.data_month data_month,
+                                             a.data_month_plan data_month_plan,
+                                             a.data_year data_year,
+                                             a.data_year_plan data_year_plan,
+                                             b.data_year_init data_year_init,
+                                             a.data_interface data_interface,
+                                             b.id id,
+                                             a.id year_id,
+                                             NULL AS init_id
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year IS NOT NULL
+                  AND data_year_init IS NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) a
+                INNER JOIN (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year IS NULL
+                  AND data_year_init IS NOT NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) b ON a.sys_org = b.sys_org
+                AND a.bas_industry = b.bas_industry
+                AND a.data_date = b.data_date
+                AND a.bas_index = b.bas_index;
+        DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）'
+	AND bas_idx_data_month_z.data_month IS NULL;
+DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.year_id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）'
+	AND bas_idx_data_month_z.data_month IS NULL;
+        INSERT INTO bas_idx_data_month_z SELECT
+                                             a.sys_org sys_org,
+                                             a.bas_industry bas_industry,
+                                             a.project project,
+                                             a.data_date data_date,
+                                             a.bas_index bas_index,
+                                             a.data_source data_source,
+                                             b.data_month data_month,
+                                             a.data_month_plan data_month_plan,
+                                             a.data_year data_year,
+                                             a.data_year_plan data_year_plan,
+                                             a.data_year_init data_year_init,
+                                             a.data_interface data_interface,
+                                             b.id id,
+                                             a.id year_id,
+                                             NULL AS init_id
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year IS NOT NULL
+                  AND data_month IS NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) a
+                INNER JOIN (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year IS NULL
+                  AND data_month IS NOT NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) b ON a.sys_org = b.sys_org
+                AND a.bas_industry = b.bas_industry
+                AND a.data_date = b.data_date
+                AND a.bas_index = b.bas_index;
+        DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）'
+	AND bas_idx_data_month_z.data_year_init IS NULL;
+DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.year_id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）'
+	AND bas_idx_data_month_z.data_year_init IS NULL;
+        INSERT INTO bas_idx_data_month_z SELECT
+                                             a.sys_org sys_org,
+                                             a.bas_industry bas_industry,
+                                             a.project project,
+                                             a.data_date data_date,
+                                             a.bas_index bas_index,
+                                             a.data_source data_source,
+                                             b.data_month data_month,
+                                             a.data_month_plan data_month_plan,
+                                             a.data_year data_year,
+                                             a.data_year_plan data_year_plan,
+                                             a.data_year_init data_year_init,
+                                             a.data_interface data_interface,
+                                             b.id id,
+                                             a.id year_id,
+                                             NULL AS init_id
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year_init IS NOT NULL
+                  AND data_month IS NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) a
+                INNER JOIN (
+                SELECT
+                    *
+                FROM
+                    bas_idx_data_month_d
+                WHERE
+                    data_year_init IS NULL
+                  AND data_month IS NOT NULL
+                  AND data_interface = '带息负债情况表（月报表）'
+                  AND bas_index IN ( 395, 396 )) b ON a.sys_org = b.sys_org
+                AND a.bas_industry = b.bas_industry
+                AND a.data_date = b.data_date
+                AND a.bas_index = b.bas_index;
+        DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）'
+	AND bas_idx_data_month_z.data_year IS NULL;
+DELETE bas_idx_data_month_d
+FROM
+	bas_idx_data_month_d
+	INNER JOIN bas_idx_data_month_z ON bas_idx_data_month_d.id = bas_idx_data_month_z.year_id
+WHERE
+	bas_idx_data_month_d.data_interface = '带息负债情况表（月报表）'
+	AND bas_idx_data_month_z.data_year IS NULL;
+	-- 				带息负债情况表（月报表）未合并存入主表
+        INSERT INTO bas_idx_data_month_z SELECT
+                                             sys_org,
+                                             bas_industry,
+                                             project,
+                                             data_date,
+                                             bas_index,
+                                             data_source,
+                                             data_month,
+                                             data_month_plan,
+                                             data_year,
+                                             data_year_plan,
+                                             data_year_init,
+                                             data_interface,
+                                             id,
+                                             year_id,
+                                             NULL AS init_id
+        FROM
+            bas_idx_data_month_d
+        WHERE
+            data_interface = '带息负债情况表（月报表）'
+          AND bas_index IN ( 395, 396 );
+
+        insert into bas_idx_data_month_f
+        select sys_org,
+               bas_industry,
+               project,
+               data_date,
+               bas_index,
+               data_source,
+               data_month,
+               data_month_plan,
+               data_year,-
+                   data_year_plan,
+               data_year_init,
+               data_interface
+        FROM bas_idx_data_month_z;
+
+
+
+
+
+-- 				--应收账款统计表（月报表）
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '应收账款统计表（月报表）';
+
+--        --主要财务绩效指标分析表
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '主要财务绩效指标分析表';
+
+--         --存货统计表（月报表）
+
+        insert into bas_idx_data_month_e
+        select *
+        FROM bas_idx_data_month_d
+        WHERE data_interface = '存货统计表（月报表）';
+
+--         处理完的数据回填
+        insert into bas_idx_data_month_f
+        select sys_org,
+               bas_industry,
+               project,
+               data_date,
+               bas_index,
+               data_source,
+               data_month,
+               data_month_plan,
+               data_year,-
+                   data_year_plan,
+               data_year_init,
+               data_interface
+        FROM bas_idx_data_month_e;
+        INSERT INTO bas_idx_data_month SELECT * FROM bas_idx_data_month_f;
+    </insert>
+    <update id="insertCalIndexDatas">
+        --         变动费用=燃料费+水费
+        delete from bas_idx_data_month where bas_index=14 and data_date >=  #{begDate,jdbcType=VARCHAR};
+        insert into bas_idx_data_month SELECT sys_org,bas_industry,project,data_date,14 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index in(15,16) and data_date >= #{begDate,jdbcType=VARCHAR} group by sys_org,bas_industry,project,data_date,data_source;
+
+--          固定费用=材料费+职工薪酬+折旧费+修理费+委托运行费+其他费用
+        delete from bas_idx_data_month where bas_index=17 and data_date >= #{begDate,jdbcType=VARCHAR};
+        insert into bas_idx_data_month SELECT sys_org,bas_industry,project,data_date,17 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index in(18,19,20,21,22,23) and data_date >= #{begDate,jdbcType=VARCHAR} group by sys_org,bas_industry,project,data_date,data_source;
+
+--          营业外收支净额35=营业外收入36-营业外支出37
+        delete from bas_idx_data_month where bas_index=35 and data_date >= #{begDate,jdbcType=VARCHAR};
+        insert into bas_idx_data_month SELECT a.sys_org,a.bas_industry,a.project,a.data_date,35 as bas_index,a.data_source,a.data_month-b.data_month as data_month,a.data_month_plan-b.data_month_plan as data_month_plan,a.data_year-b.data_year as data_year,a.data_year_plan-b.data_year_plan as data_year_plan,a.data_year_init-b.data_year_init as data_year_init,null as data_interface from (select *  FROM `bas_idx_data_month` where bas_index =36  and data_date >= #{begDate,jdbcType=VARCHAR})a, (select *  FROM `bas_idx_data_month` where bas_index =37  and data_date >= #{begDate,jdbcType=VARCHAR})b where  a.sys_org=b.sys_org and  a.bas_industry=b.bas_industry and a.project=b.project and a.data_date=b.data_date and a.data_source=b.data_source;
+--          电力配套（8）的归属于母公司所有者的净利润（5）净利润（39）营业收入（93）营业成本（77） = 7个产业指标数据加和（核电服务（13）+路港（14）+燃料（15）+检修与运行（16）+工程服务（17）+技术服务（18）+售电服务（20））
+        delete from bas_idx_data_month where bas_index =5 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=8;
+        insert into bas_idx_data_month SELECT sys_org,8 as bas_industry,project,data_date,5 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index =5 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry in(13,14,15,16,17,18,20) group by sys_org,project,data_date,data_source;
+        delete from bas_idx_data_month where bas_index =39 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=8;
+        insert into bas_idx_data_month SELECT sys_org,8 as bas_industry,project,data_date,39 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index =39 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry in(13,14,15,16,17,18,20) group by sys_org,project,data_date,data_source;
+        delete from bas_idx_data_month where bas_index =93 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=8;
+        insert into bas_idx_data_month SELECT sys_org,8 as bas_industry,project,data_date,93 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index =93 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry in(13,14,15,16,17,18,20) group by sys_org,project,data_date,data_source;
+        delete from bas_idx_data_month where bas_index =77 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=8;
+        insert into bas_idx_data_month SELECT sys_org,8 as bas_industry,project,data_date,77 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index =77 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry in(13,14,15,16,17,18,20) group by sys_org,project,data_date,data_source;
+
+
+--          其他产业（7）的归属于母公司所有者的净利润（5）净利润（39）营业收入（93）营业成本（77） = （汇总（-1）-新能源（1，2）-火电3-电力配套8）
+        delete from bas_idx_data_month where bas_index =5 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=7;
+        insert into bas_idx_data_month  SELECT a.sys_org,7 as bas_industry,a.project,a.data_date,5 as bas_index,a.data_source,a.data_month-b.data_month as data_month,a.data_month_plan-b.data_month_plan as data_month_plan,a.data_year-b.data_year as data_year,a.data_year_plan-b.data_year_plan as data_year_plan,a.data_year_init-b.data_year_init as data_year_init,null as data_interface from (select *  FROM `bas_idx_data_month` where bas_index =5 and bas_industry=-1  and data_date >= #{begDate,jdbcType=VARCHAR})a, (select sys_org,project,data_date,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init  FROM `bas_idx_data_month` where bas_index =5 and bas_industry in(1,2,3,8)  and data_date >= #{begDate,jdbcType=VARCHAR}  group by sys_org,project,data_date,data_source)b where  a.sys_org=b.sys_org  and a.project=b.project and a.data_date=b.data_date and a.data_source=b.data_source;
+        delete from bas_idx_data_month where bas_index =39 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=7;
+        insert into bas_idx_data_month  SELECT a.sys_org,7 as bas_industry,a.project,a.data_date,39 as bas_index,a.data_source,a.data_month-b.data_month as data_month,a.data_month_plan-b.data_month_plan as data_month_plan,a.data_year-b.data_year as data_year,a.data_year_plan-b.data_year_plan as data_year_plan,a.data_year_init-b.data_year_init as data_year_init,null as data_interface from (select *  FROM `bas_idx_data_month` where bas_index =39 and bas_industry=-1  and data_date >= #{begDate,jdbcType=VARCHAR})a, (select sys_org,project,data_date,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init  FROM `bas_idx_data_month` where bas_index =39 and bas_industry in(1,2,3,8)  and data_date >= #{begDate,jdbcType=VARCHAR}  group by sys_org,project,data_date,data_source)b where  a.sys_org=b.sys_org  and a.project=b.project and a.data_date=b.data_date and a.data_source=b.data_source;
+        delete from bas_idx_data_month where bas_index =93 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=7;
+        insert into bas_idx_data_month  SELECT a.sys_org,7 as bas_industry,a.project,a.data_date,93 as bas_index,a.data_source,a.data_month-b.data_month as data_month,a.data_month_plan-b.data_month_plan as data_month_plan,a.data_year-b.data_year as data_year,a.data_year_plan-b.data_year_plan as data_year_plan,a.data_year_init-b.data_year_init as data_year_init,null as data_interface from (select *  FROM `bas_idx_data_month` where bas_index =93 and bas_industry=-1  and data_date >= #{begDate,jdbcType=VARCHAR})a, (select sys_org,project,data_date,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init  FROM `bas_idx_data_month` where bas_index =93 and bas_industry in(1,2,3,8)  and data_date >= #{begDate,jdbcType=VARCHAR}  group by sys_org,project,data_date,data_source)b where  a.sys_org=b.sys_org  and a.project=b.project and a.data_date=b.data_date and a.data_source=b.data_source;
+        delete from bas_idx_data_month where bas_index =77 and data_date >= #{begDate,jdbcType=VARCHAR} and bas_industry=7;
+        insert into bas_idx_data_month  SELECT a.sys_org,7 as bas_industry,a.project,a.data_date,77 as bas_index,a.data_source,a.data_month-b.data_month as data_month,a.data_month_plan-b.data_month_plan as data_month_plan,a.data_year-b.data_year as data_year,a.data_year_plan-b.data_year_plan as data_year_plan,a.data_year_init-b.data_year_init as data_year_init,null as data_interface from (select *  FROM `bas_idx_data_month` where bas_index =77 and bas_industry=-1  and data_date >= #{begDate,jdbcType=VARCHAR})a, (select sys_org,project,data_date,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init  FROM `bas_idx_data_month` where bas_index =77 and bas_industry in(1,2,3,8)  and data_date >= #{begDate,jdbcType=VARCHAR}  group by sys_org,project,data_date,data_source)b where  a.sys_org=b.sys_org  and a.project=b.project and a.data_date=b.data_date and a.data_source=b.data_source;
+
+
+
+--          营业毛利374 =主营业务收入10-主营业务成本13
+        delete from bas_idx_data_month where bas_index=374 and data_date >= #{begDate,jdbcType=VARCHAR};
+        INSERT INTO bas_idx_data_month SELECT
+                                           sys_org,
+                                           bas_industry,
+                                           project,
+                                           data_date,
+                                           374 AS bas_index,
+                                           data_source,
+                                           data_month1 - data_month2 AS data_month,
+                                           data_month_plan1 - data_month_plan2 AS data_month_plan,
+                                           data_year1 - data_year2 AS data_year,
+                                           data_year_plan1 - data_year_plan2 AS data_year_plan,
+                                           data_year_init1 - data_year_init2 AS data_year_init,
+                                           NULL AS data_interface
+        FROM
+            (
+                SELECT
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source,
+                    sum( CASE WHEN bas_index = 10 THEN data_month ELSE NULL END ) AS data_month1,
+                    sum( CASE WHEN bas_index = 10 THEN data_month_plan ELSE NULL END ) AS data_month_plan1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year ELSE NULL END ) AS data_year1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year_plan ELSE NULL END ) AS data_year_plan1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year_init ELSE NULL END ) AS data_year_init1,
+                    sum( CASE WHEN bas_index = 13 THEN data_month ELSE NULL END ) AS data_month2,
+                    sum( CASE WHEN bas_index = 13 THEN data_month_plan ELSE NULL END ) AS data_month_plan2,
+                    sum( CASE WHEN bas_index = 13 THEN data_year ELSE NULL END ) AS data_year2,
+                    sum( CASE WHEN bas_index = 13 THEN data_year_plan ELSE NULL END ) AS data_year_plan2,
+                    sum( CASE WHEN bas_index = 13 THEN data_year_init ELSE NULL END ) AS data_year_init2
+                FROM bas_idx_data_month
+                WHERE
+                    bas_index IN ( 10, 13 )  and data_date >= #{begDate,jdbcType=VARCHAR}
+                GROUP BY
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source
+            ) a;
+--           各产业营业毛利率198=(主营业务收入-主营业务成本)/主营业务收入=营业毛利374/主营业务收入10
+        delete from bas_idx_data_month where bas_index=198 and data_date >= #{begDate,jdbcType=VARCHAR};
+        INSERT INTO bas_idx_data_month SELECT
+                                           sys_org,
+                                           bas_industry,
+                                           project,
+                                           data_date,
+                                           198 AS bas_index,
+                                           data_source,
+                                           (case when data_month1=0 then null else data_month2*100/data_month1 end) AS data_month,
+                                           (case when data_month_plan1=0 then null else data_month_plan2*100/data_month_plan1 end) AS data_month_plan,
+                                           (case when data_year1=0 then null else data_year2*100/data_year1 end) AS data_year,
+                                           (case when data_year_plan1=0 then null else data_year_plan2*100/data_year_plan1 end) AS data_year_plan,
+                                           (case when data_year_init1=0 then null else data_year_init2*100/data_year_init1 end) AS data_year_init,
+                                           NULL AS data_interface
+        FROM
+            (
+                SELECT
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source,
+                    sum( CASE WHEN bas_index = 10 THEN data_month ELSE NULL END ) AS data_month1,
+                    sum( CASE WHEN bas_index = 10 THEN data_month_plan ELSE NULL END ) AS data_month_plan1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year ELSE NULL END ) AS data_year1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year_plan ELSE NULL END ) AS data_year_plan1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year_init ELSE NULL END ) AS data_year_init1,
+                    sum( CASE WHEN bas_index = 374 THEN data_month ELSE NULL END ) AS data_month2,
+                    sum( CASE WHEN bas_index = 374 THEN data_month_plan ELSE NULL END ) AS data_month_plan2,
+                    sum( CASE WHEN bas_index = 374 THEN data_year ELSE NULL END ) AS data_year2,
+                    sum( CASE WHEN bas_index = 374 THEN data_year_plan ELSE NULL END ) AS data_year_plan2,
+                    sum( CASE WHEN bas_index = 374 THEN data_year_init ELSE NULL END ) AS data_year_init2
+                FROM bas_idx_data_month
+                WHERE
+                    bas_index IN ( 10, 374 )  and bas_industry!=-1 and data_date >= #{begDate,jdbcType=VARCHAR}
+                GROUP BY
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source
+            ) a;
+--           汇总产业营业毛利率198=(主营业务收入-主营业务成本)/主营业务收入=营业毛利374/主营业务收入10
+        INSERT INTO bas_idx_data_month SELECT
+                                           sys_org,
+                                           -1,
+                                           project,
+                                           data_date,
+                                           198 AS bas_index,
+                                           data_source,
+                                           (case when data_month1=0 then null else data_month2*100/data_month1 end) AS data_month,
+                                           (case when data_month_plan1=0 then null else data_month_plan2*100/data_month_plan1 end) AS data_month_plan,
+                                           (case when data_year1=0 then null else data_year2*100/ data_year1end) AS data_year,
+                                           (case when data_year_plan1=0 then null else data_year_plan2*100/data_year_plan1 end) AS data_year_plan,
+                                           (case when data_year_init1=0 then null else data_year_init2*100/data_year_init1 end) AS data_year_init,
+                                           NULL AS data_interface
+        FROM
+            (
+                SELECT
+                    sys_org,
+                    project,
+                    data_date,
+                    data_source,
+                    sum( CASE WHEN bas_index = 10 THEN data_month ELSE NULL END ) AS data_month1,
+                    sum( CASE WHEN bas_index = 10 THEN data_month_plan ELSE NULL END ) AS data_month_plan1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year ELSE NULL END ) AS data_year1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year_plan ELSE NULL END ) AS data_year_plan1,
+                    sum( CASE WHEN bas_index = 10 THEN data_year_init ELSE NULL END ) AS data_year_init1,
+                    sum( CASE WHEN bas_index = 374 THEN data_month ELSE NULL END ) AS data_month2,
+                    sum( CASE WHEN bas_index = 374 THEN data_month_plan ELSE NULL END ) AS data_month_plan2,
+                    sum( CASE WHEN bas_index = 374 THEN data_year ELSE NULL END ) AS data_year2,
+                    sum( CASE WHEN bas_index = 374 THEN data_year_plan ELSE NULL END ) AS data_year_plan2,
+                    sum( CASE WHEN bas_index = 374 THEN data_year_init ELSE NULL END ) AS data_year_init2
+                FROM bas_idx_data_month
+                WHERE
+                    bas_index IN ( 10, 374 )  and bas_industry =-1 and data_date >= #{begDate,jdbcType=VARCHAR}
+                GROUP BY
+                    sys_org,
+                    project,
+                    data_date,
+                    data_source
+            ) a;
+
+--           净利润率96=净利润39/营业收入93
+        delete from bas_idx_data_month where bas_index=96 and data_date >= #{begDate,jdbcType=VARCHAR};
+        INSERT INTO bas_idx_data_month SELECT
+                                           sys_org,
+                                           bas_industry,
+                                           project,
+                                           data_date,
+                                           96 AS bas_index,
+                                           data_source,
+                                           (case when data_month1=0 then null else data_month2*100/data_month1 end) AS data_month,
+                                           (case when data_month_plan1=0 then null else data_month_plan2*100/data_month_plan1 end) AS data_month_plan,
+                                           (case when data_year1=0 then null else data_year2*100/data_year1 end) AS data_year,
+                                           (case when data_year_plan1=0 then null else data_year_plan2*100/data_year_plan1 end) AS data_year_plan,
+                                           (case when data_year_init1=0 then null else data_year_init2*100/data_year_init1 end) AS data_year_init,
+                                           NULL AS data_interface
+        FROM
+            (
+                SELECT
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source,
+                    sum( CASE WHEN bas_index = 93 THEN data_month ELSE NULL END ) AS data_month1,
+                    sum( CASE WHEN bas_index = 93 THEN data_month_plan ELSE NULL END ) AS data_month_plan1,
+                    sum( CASE WHEN bas_index = 93 THEN data_year ELSE NULL END ) AS data_year1,
+                    sum( CASE WHEN bas_index = 93 THEN data_year_plan ELSE NULL END ) AS data_year_plan1,
+                    sum( CASE WHEN bas_index = 93 THEN data_year_init ELSE NULL END ) AS data_year_init1,
+                    sum( CASE WHEN bas_index = 39 THEN data_month ELSE NULL END ) AS data_month2,
+                    sum( CASE WHEN bas_index = 39 THEN data_month_plan ELSE NULL END ) AS data_month_plan2,
+                    sum( CASE WHEN bas_index = 39 THEN data_year ELSE NULL END ) AS data_year2,
+                    sum( CASE WHEN bas_index = 39 THEN data_year_plan ELSE NULL END ) AS data_year_plan2,
+                    sum( CASE WHEN bas_index = 39 THEN data_year_init ELSE NULL END ) AS data_year_init2
+                FROM bas_idx_data_month
+                WHERE
+                    bas_index IN ( 39, 93)  and data_date >= #{begDate,jdbcType=VARCHAR}
+                GROUP BY
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source
+            ) a;
+
+--           两金占流动资产比重164=(存货132+应收131)/流动资产126
+        delete from bas_idx_data_month where bas_index=164 and data_date >= #{begDate,jdbcType=VARCHAR};
+        INSERT INTO bas_idx_data_month SELECT
+                                           sys_org,
+                                           bas_industry,
+                                           project,
+                                           data_date,
+                                           164 AS bas_index,
+                                           data_source,
+                                           (case when data_month3=0 then null else (data_month1 +data_month2)*100/data_month3 end) AS data_month,
+                                           (case when data_month_plan3=0 then null else (data_month_plan1+data_month_plan2)*100/data_month_plan3 end) AS data_month_plan,
+                                           (case when data_year3=0 then null else (data_year1+data_year2)*100/data_year3 end) AS data_year,
+                                           (case when data_year_plan3=0 then null else (data_year_plan1+data_year_plan2)*100/data_year_plan3 end) AS data_year_plan,
+                                           (case when data_year_init3=0 then null else (data_year_init1+data_year_init2)*100/data_year_init3 end) AS data_year_init,
+                                           NULL AS data_interface
+        FROM
+            (
+                SELECT
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source,
+                    sum( CASE WHEN bas_index = 132 THEN data_month ELSE NULL END ) AS data_month1,
+                    sum( CASE WHEN bas_index = 132 THEN data_month_plan ELSE NULL END ) AS data_month_plan1,
+                    sum( CASE WHEN bas_index = 132 THEN data_year ELSE NULL END ) AS data_year1,
+                    sum( CASE WHEN bas_index = 132 THEN data_year_plan ELSE NULL END ) AS data_year_plan1,
+                    sum( CASE WHEN bas_index = 132 THEN data_year_init ELSE NULL END ) AS data_year_init1,
+                    sum( CASE WHEN bas_index = 131 THEN data_month ELSE NULL END ) AS data_month2,
+                    sum( CASE WHEN bas_index = 131 THEN data_month_plan ELSE NULL END ) AS data_month_plan2,
+                    sum( CASE WHEN bas_index = 131 THEN data_year ELSE NULL END ) AS data_year2,
+                    sum( CASE WHEN bas_index = 131 THEN data_year_plan ELSE NULL END ) AS data_year_plan2,
+                    sum( CASE WHEN bas_index = 131 THEN data_year_init ELSE NULL END ) AS data_year_init2,
+                    sum( CASE WHEN bas_index = 126 THEN data_month ELSE NULL END ) AS data_month3,
+                    sum( CASE WHEN bas_index = 126 THEN data_month_plan ELSE NULL END ) AS data_month_plan3,
+                    sum( CASE WHEN bas_index = 126 THEN data_year ELSE NULL END ) AS data_year3,
+                    sum( CASE WHEN bas_index = 126 THEN data_year_plan ELSE NULL END ) AS data_year_plan3,
+                    sum( CASE WHEN bas_index = 126 THEN data_year_init ELSE NULL END ) AS data_year_init3
+                FROM bas_idx_data_month
+                WHERE
+                    bas_index IN ( 132, 131,126)  and data_date >= #{begDate,jdbcType=VARCHAR}
+                GROUP BY
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source
+            ) a;
+
+--           无形资产增长率383=(无形资产384期末-无形资产384期初)/无形资产384期初(期末=data_year,期初=data_year_init)
+        delete from bas_idx_data_month where bas_index=383 and data_date >= #{begDate,jdbcType=VARCHAR};
+        insert into bas_idx_data_month
+        SELECT sys_org,bas_industry,project,data_date,383 as bas_index,data_source,
+               (case when data_year_init=0 then null else (data_year-data_year_init)*100/data_year_init end) as data_month,null as data_month_plan,null as data_year,null as data_year_plan,null as data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index=384  and data_date >= #{begDate,jdbcType=VARCHAR};
+
+        --           应付账款周转率(目前没有计算)
+--
+--           应收账款（账龄三年及以上的应收账款）将3-4/4-5/5年以上加总
+--           账龄三年及以上的应收账款401=3-4年应收账款金额116+4-5年应收账款金额117+5年以上应收账款金额118
+        delete from bas_idx_data_month where bas_index=401 and data_date >= #{begDate,jdbcType=VARCHAR};
+        insert into bas_idx_data_month SELECT sys_org,bas_industry,project,data_date,401 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index in(116,117,118) and data_date >= #{begDate,jdbcType=VARCHAR} group by sys_org,bas_industry,project,data_date,data_source;
+--          应付账款周转率385=主营业务成本13/(1/2*(应付账款期初值135+应付账款期末值135))，计算出来的为月数据
+        delete from bas_idx_data_month where bas_index=385 and data_date >= #{begDate,jdbcType=VARCHAR};
+        INSERT INTO bas_idx_data_month SELECT
+                                           sys_org,
+                                           bas_industry,
+                                           project,
+                                           data_date,
+                                           385 AS bas_index,
+                                           data_source,
+                                           (case when data_year+data_year_init=0 then null else data_month*100 /(1/2*(data_year+data_year_init)) end) AS data_month,
+                                           null AS data_month_plan,
+                                           null AS data_year,
+                                           null AS data_year_plan,
+                                           null AS data_year_init,
+                                           NULL AS data_interface
+        FROM
+            (
+                SELECT
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source,
+                    sum( CASE WHEN bas_index = 135 THEN data_year ELSE NULL END ) AS data_year,
+                    sum( CASE WHEN bas_index = 135 THEN data_year_init ELSE NULL END ) AS data_year_init,
+                    sum( CASE WHEN bas_index = 13 THEN data_month ELSE NULL END ) AS data_month
+                FROM bas_idx_data_month
+                WHERE
+                    bas_index IN ( 135, 13 )  and data_date >= #{begDate,jdbcType=VARCHAR}
+                GROUP BY
+                    sys_org,
+                    bas_industry,
+                    project,
+                    data_date,
+                    data_source
+            ) a;
+--          期间费用 95=财务 29+管理 28+销售 78+研发 27
+        delete from bas_idx_data_month where bas_index=95 and data_date >=  #{begDate,jdbcType=VARCHAR};
+        insert into bas_idx_data_month SELECT sys_org,bas_industry,project,data_date,95 as bas_index,data_source,sum(data_month) as data_month,sum(data_month_plan) as data_month_plan,sum(data_year) data_year,sum(data_year_plan) data_year_plan,sum(data_year_init) data_year_init,null as data_interface FROM `bas_idx_data_month` where bas_index in(27,28,29,78) and data_date >= #{begDate,jdbcType=VARCHAR} group by sys_org,bas_industry,project,data_date,data_source;
+
+--          综合厂用电率,总资产周转率,存货周转率,应收账款周转率 转换单位：*100
+        update  bas_idx_data_month
+        set data_month=data_month*100,
+            data_month_plan=data_month_plan*100,
+            data_year=data_year*100,
+            data_year_plan=data_year_plan*100,
+            data_year_init=data_year_init*100
+        where bas_index in(42,103,70,71)
+          and data_date >= #{begDate,jdbcType=VARCHAR};
+
+--          存货-燃料、材料 转换单位：元转万元
+        update  bas_idx_data_month
+        set data_month=data_month/10000,
+            data_month_plan=data_month_plan/100000,
+            data_year=data_year/10000,
+            data_year_plan=data_year_plan/10000,
+            data_year_init=data_year_init/10000
+        where bas_index in(397,398,399,400,401)
+          and data_date >= #{begDate,jdbcType=VARCHAR};
+--         供热标准煤耗 转换单位为供热标准煤耗（千克／吉焦）
+        update  bas_idx_data_month
+        set data_month=data_month/1000,
+            data_month_plan=data_month_plan/1000,
+            data_year=data_year/1000,
+            data_year_plan=data_year_plan/1000,
+            data_year_init=data_year_init/1000
+        where bas_index in(146)
+          and data_date >= #{begDate,jdbcType=VARCHAR};
+
+    </update>
+    <insert id="testMergeData">
+        insert into bas_idx_data_month_g(sys_org , bas_industry,
+                                         project,data_date,bas_index,data_source,
+                                         data_month,
+                                         data_month_plan,
+                                         data_year,data_year_plan,data_year_init,data_interface)
+        select DISTINCT *
+        FROM bas_idx_data_month_c;
+
+        insert into bas_idx_data_month_h
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface
+        FROM (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '利润月报表（总）') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '利润月报表（总）') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+        insert into bas_idx_data_month_h
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               a.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               b.data_year_init  data_year_init,
+               a.data_interface  data_interface
+        FROM (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is not null
+                and data_year_init is null
+                and data_interface = '资产负债月报表') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is null
+                AND data_year_init is not null
+                and data_interface = '资产负债月报表') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+
+        insert into bas_idx_data_month_h
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface
+        FROM (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '利润月报表（一）') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '利润月报表（一）') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+
+        insert into bas_idx_data_month_h
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface
+        FROM (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '成本情况月报表') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '成本情况月报表') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+
+        insert into bas_idx_data_month_h
+        select a.sys_org         sys_org,
+               a.bas_industry    bas_industry,
+               a.project         project,
+               a.data_date       data_date,
+               a.bas_index       bas_index,
+               a.data_source     data_source,
+               b.data_month      data_month,
+               a.data_month_plan data_month_plan,
+               a.data_year       data_year,
+               a.data_year_plan  data_year_plan,
+               a.data_year_init  data_year_init,
+               a.data_interface  data_interface
+        FROM (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is not null
+                and data_month is null
+                and data_interface = '电力技术经济指标月报表') a
+                 INNER join
+             (select *
+              FROM bas_idx_data_month_g
+              WHERE data_year is null
+                AND data_month is not null
+                and data_interface = '电力技术经济指标月报表') b
+             on a.sys_org = b.sys_org
+                 and a.bas_industry = b.bas_industry
+                 AND a.data_date = b.data_date
+                 and a.bas_index = b.bas_index;
+
+
+        insert into bas_idx_data_month_h(sys_org , bas_industry,
+                project,data_date,bas_index,data_source,
+                data_month,
+                data_month_plan,
+                data_year,data_year_plan,data_year_init,data_interface)
+        select *
+        FROM bas_idx_data_month_g
+        WHERE data_interface = '应收账款统计表（月报表）';
+
+
+
+        insert into bas_idx_data_month_h(sys_org , bas_industry,
+                project,data_date,bas_index,data_source,
+                data_month,
+                data_month_plan,
+                data_year,data_year_plan,data_year_init,data_interface)
+        select *
+        FROM bas_idx_data_month_g
+        WHERE data_interface = '主要财务绩效指标分析表';
+
+
+
+        insert into bas_idx_data_month_h(sys_org , bas_industry,
+                project,data_date,bas_index,data_source,
+                data_month,
+                data_month_plan,
+                data_year,data_year_plan,data_year_init,data_interface)
+        select *
+        FROM bas_idx_data_month_g
+        WHERE data_interface = '存货统计表（月报表）';
+
+
+        insert into bas_idx_data_month_l
+        select sys_org,
+               bas_industry,
+               project,
+               data_date,
+               bas_index,
+               data_source,
+               data_month,
+               data_month_plan,
+               data_year,
+               data_year_plan,
+               data_year_init,
+               data_interface
+        FROM bas_idx_data_month_h;
+
+    </insert>
+    <select id="selectByKeys" resultMap="BaseResultMap">
+        select * from bas_idx_data_month
+        where sys_org=${sysOrg}
+        and project=-1
+        and data_source!=0
+        and bas_industry=${industry}
+        and data_date='${dataDate}'
+        and bas_index=${index}
+        limit 1
+    </select>
+</mapper>

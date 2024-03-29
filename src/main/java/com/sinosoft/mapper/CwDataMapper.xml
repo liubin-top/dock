@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinosoft.mapper.CwDataMapper">
+  <resultMap id="BaseResultMap" type="com.sinosoft.model.CwData">
+
+    <result column="index_value" jdbcType="VARCHAR" property="indexValue" />
+
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+
+    <result column="s_index_name" jdbcType="VARCHAR" property="sIndexName" />
+
+    <result column="s_report_name" jdbcType="VARCHAR" property="sReportName" />
+    <result column="time_type_code" jdbcType="VARCHAR" property="timeTypeCode" />
+    <result column="t_index_name" jdbcType="VARCHAR" property="tIndexName" />
+
+    <result column="value_type_code" jdbcType="VARCHAR" property="valueTypeCode" />
+    <result column="industry_name" jdbcType="VARCHAR" property="industryName" />
+    <result column="data_date" jdbcType="DATE" property="dataDate" />
+  </resultMap>
+
+  <resultMap id="BaseResultJykjTjMap" type="com.sinosoft.model.JykjDataTjLocal">
+
+    <result column="c1_category" jdbcType="VARCHAR" property="c1Category" />
+
+    <result column="c1_unit" jdbcType="VARCHAR" property="c1Unit" />
+
+    <result column="c1_value" jdbcType="VARCHAR" property="c1Value" />
+
+    <result column="dim1" jdbcType="VARCHAR" property="dim1" />
+    <result column="dim10" jdbcType="VARCHAR" property="dim10" />
+    <result column="dim1_code" jdbcType="VARCHAR" property="dim1Code" />
+
+    <result column="dim1_level" jdbcType="VARCHAR" property="dim1Level" />
+    <result column="dim1_mdcode" jdbcType="VARCHAR" property="dim1Mdcode" />
+    <result column="dim2" jdbcType="DATE" property="dim2" />
+    <result column="dim4" jdbcType="VARCHAR" property="dim4" />
+    <result column="dim6" jdbcType="DATE" property="dim6" />
+    <result column="dim8" jdbcType="DATE" property="dim8" />
+    <result column="dim9" jdbcType="DATE" property="dim9" />
+  </resultMap>
+
+  <resultMap id="BaseResultJykjJHMap" type="com.sinosoft.model.JykjDataJh">
+    <result column="dim1" jdbcType="VARCHAR" property="dim1" />
+    <result column="dim2" jdbcType="VARCHAR" property="dim2" />
+    <result column="dim3" jdbcType="VARCHAR" property="dim3" />
+    <result column="dim4" jdbcType="VARCHAR" property="dim4" />
+    <result column="dim5" jdbcType="VARCHAR" property="dim5" />
+    <result column="dim6" jdbcType="VARCHAR" property="dim6" />
+    <result column="dim7" jdbcType="VARCHAR" property="dim7" />
+    <result column="dim8" jdbcType="VARCHAR" property="dim8" />
+    <result column="dim9" jdbcType="DATE" property="dim9" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="insertdate" jdbcType="DATE" property="insertdate" />
+    <result column="scene" jdbcType="DATE" property="scene" />
+    <result column="dim10" jdbcType="DATE" property="dim10" />
+    <result column="dim11" jdbcType="DATE" property="dim11" />
+    <result column="xmjhztz" jdbcType="DATE" property="xmjhztz" />
+    <result column="njhztz" jdbcType="DATE" property="njhztz" />
+  </resultMap>
+
+
+  <resultMap id="BaseResultJykjFdlJhMap" type="com.sinosoft.model.JykjFdlJh">
+    <result column="dim2" jdbcType="VARCHAR" property="dim2" />
+    <result column="dim4" jdbcType="VARCHAR" property="dim4" />
+    <result column="dim5" jdbcType="VARCHAR" property="dim5" />
+    <result column="dim6" jdbcType="VARCHAR" property="dim6" />
+    <result column="dim7" jdbcType="VARCHAR" property="dim7" />
+    <result column="dim8" jdbcType="VARCHAR" property="dim8" />
+    <result column="dim9" jdbcType="VARCHAR" property="dim9" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="insertdate" jdbcType="VARCHAR" property="insertdate" />
+    <result column="scene" jdbcType="VARCHAR" property="scene" />
+    <result column="dim10" jdbcType="VARCHAR" property="dim10" />
+    <result column="dim11" jdbcType="VARCHAR" property="dim11" />
+  </resultMap>
+
+  <select id="selectPgaeList" resultMap="BaseResultMap">
+    select index_value,org_name,s_index_name,s_report_name,time_type_code,t_index_name,value_type_code,industry_name,data_date from ${tableName} WHERE data_date>='2020-01-01' LIMIT #{page},#{size}
+  </select>
+  <select id="selectAllCount" resultType="java.lang.Integer">
+    select count(1) from ${tableName} where data_date>='2020-01-01'
+  </select>
+    <select id="selectAllCountJyKjTj" resultType="java.lang.Integer">
+      select count(1) from ${tableName}
+    </select>
+  <select id="selectPgaeListJyKjTj" resultMap="BaseResultJykjTjMap">
+    select c1_category,
+             dim1,
+      dim1_code,
+      dim1_level,
+      dim1_mdcode,
+      dim2,
+      dim4,
+      dim6,
+      dim8,
+      dim9,
+      dim10,
+      c1_value,
+      c1_unit from ${tableName} LIMIT #{page},#{size}
+  </select>
+  <select id="selectPgaeListJyKjJH" resultMap="BaseResultJykjJHMap">
+    select dim1,
+             dim2,
+      dim3,
+      dim4,
+      dim5,
+      dim6,
+      dim7,
+      dim8,
+      dim9,
+      value,
+insertdate,
+scene,
+dim10,
+dim11,
+xmjhztz,
+njhztz
+    from ${tableName} LIMIT #{page},#{size}
+  </select>
+  <select id="selectPgaeListJyKjFdl" resultMap="BaseResultJykjFdlJhMap">
+    select dim2,
+             dim4,
+      dim5,
+      dim6,
+      dim7,
+      dim8,
+      dim9,
+      value,
+insertdate,
+scene,
+dim10,
+dim11
+
+    from ${tableName} LIMIT #{page},#{size}
+  </select>
+
+
+</mapper>

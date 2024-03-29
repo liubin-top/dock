@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.13</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.sinosoft</groupId>
+	<artifactId>dock</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>dock</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<commons.lang.version>2.6</commons.lang.version>
+		<commons.lang3.version>3.8.1</commons.lang3.version>
+		<poi.version>4.1.2</poi.version>
+		<neo4j-jdbc-driver.version>3.4.0</neo4j-jdbc-driver.version>
+		<java.version>1.8</java.version>
+		<druid.version>1.1.10</druid.version>
+		<mybatis.boot.starter.version>1.3.2</mybatis.boot.starter.version>
+		<mapper.spring.boot.starter.version>2.0.3</mapper.spring.boot.starter.version>
+		<pagehelper.spring.boot.starter.version>1.2.5</pagehelper.spring.boot.starter.version>
+		<xmlbeans.version>3.1.0</xmlbeans.version>
+		<ooxml.schemas.version>1.4</ooxml.schemas.version>
+		<org.apache.poi.xwpf.converter.xhtml.version>1.0.6</org.apache.poi.xwpf.converter.xhtml.version>
+		<org.apache.poi.xwpf.converter.core.version>1.0.6</org.apache.poi.xwpf.converter.core.version>
+	</properties>
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>${mybatis.boot.starter.version}</version>
+		</dependency>
+
+		<!--mybatis-spring-boot通用Mapper-->
+		<dependency>
+			<groupId>tk.mybatis</groupId>
+			<artifactId>mapper-spring-boot-starter</artifactId>
+			<version>${mapper.spring.boot.starter.version}</version>
+		</dependency>
+
+		<!-- Spring Seesion + redis-->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
+
+		<!-- redis-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<!-- 1.5的版本默认采用的连接池技术是jedis，2.0以上版本默认连接池是lettuce, 因为此次是采用jedis，所以需要排除lettuce的jar -->
+			<exclusions>
+				<exclusion>
+					<groupId>redis.clients</groupId>
+					<artifactId>jedis</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>io.lettuce</groupId>
+					<artifactId>lettuce-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- jedis客户端 -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+		</dependency>
+
+		<!-- spring2.X集成redis所需common-pool2，使用jedis必须依赖它-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		<!--		&lt;!&ndash; pagehelper分页插件 &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.github.pagehelper</groupId>-->
+<!--			<artifactId>pagehelper-spring-boot-starter</artifactId>-->
+<!--			<version>${pagehelper.spring.boot.starter.version}</version>-->
+<!--		</dependency>-->
+		<!-- alibaba的druid数据库连接池 -->
+
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons.lang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons.lang3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter-test</artifactId>
+			<version>2.3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.80</version>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-jdbc-driver</artifactId>
+			<version>${neo4j-jdbc-driver.version}</version>
+		</dependency>
+
+
+		<!-- POI 及其依赖包 -->
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>${xmlbeans.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-excelant -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-excelant</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>ooxml-schemas</artifactId>
+			<version>${ooxml.schemas.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>org.apache.poi.xwpf.converter.core</artifactId>
+			<version>${org.apache.poi.xwpf.converter.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>org.apache.poi.xwpf.converter.xhtml</artifactId>
+			<version>${org.apache.poi.xwpf.converter.xhtml.version}</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<resources>
+			<!-- 注入mapper下*.xml配置文件（正常情况下需要把配置文件放到resources下，但是为了开发方便手工注入一下配置文件） -->
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/templates/**</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+					<include>**/*.xlsx</include>
+					<include>**/*.json</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+
+</project>
